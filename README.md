@@ -1,4 +1,36 @@
 # Lexacom-Coding-Task
+First string:
+
+Today we saw 3 patients[[new-line]]The first was Name:Michael Michaelson NHS Number:333444[[New-Line]]the second was Name:Jane Bridge NHS NUmber:55666 with her son Name:David Bridge NHS Number:a44t55[[new-line]]We then saw[[new-line]]NHS Number:999 James McDonald[[new-line]][[new-line]]NHS Number:444
+
+ 
+
+Second string:
+
+{[{"Name":"James Jamerson","NHSNumber":12345},{"Name":"Bob Sinclair","NHSNumber":5555},{"Name":"Sally Jamerson","NHSNumber":66554},{"Name":"Michael Myers","NHSNumber":6666},{"Name":"James Jamerson","NHSNumber":12345}]}
+
+Task:
+
+• Replace all instances of [[new-line]] with a new line character in the text transcription.
+• Extract all instances of NHS Number: and Name: from the text transcription.
+• Create a table of all the names with their corresponding NHS numbers.
+
+Requirements:
+
+The code must be written in C# or a react typescript.
+The code must be able to read given text and output the results to the end user/
+The code must be able to create a table of the names and NHS numbers.
+
+Output:
+
+The output of the code should have two elements, the edited transcriptions, and a table of all the
+names and NHS numbers. The table should be formatted as follows:
+
+Name NHS Number
+John Smith 1234567890
+Jane Doe 9876543210
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 How I came to the final solution.
 
 First String Processing:
