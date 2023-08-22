@@ -1,0 +1,105 @@
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // First string
+        string firstString = "Today we saw 3 patients[[new-line]]The first was Name:Michael Michaelson NHS Number:333444[[new-line]]The second was Name:Jane Bridge NHS Number:55666 with her son Name:David Bridge NHS Number:a44t55[[new-line]]We then saw[[new-line]]NHS Number:999 James McDonald[[new-line]][[new-line]]NHS Number:444";
+
+        // Replace '[[new-line]]' with a new line character
+        string modifiedFirstString = firstString.Replace("[[new-line]]", Environment.NewLine);
+
+        // Extract NHS Number and Name using regular expressions
+        List<string> nhsNumbersFirst = ExtractNhsNumbers(modifiedFirstString);
+        List<string> namesFirst = ExtractNames(modifiedFirstString);
+
+        // Create a dictionary of names with their corresponding NHS numbers
+        Dictionary<string, string> nameNhsDictionaryFirst = CreateNameNhsDictionary(namesFirst, nhsNumbersFirst);
+
+        // Display edited first string
+        Console.WriteLine("Edited First String:");
+        Console.WriteLine(modifiedFirstString);
+
+        // Display the table of names and NHS numbers for the first string
+        DisplayTable(nameNhsDictionaryFirst);
+
+        // Second string
+        string secondString = @"[{""Name"":""James Jamerson"",""NHSNumber"":12345},{""Name"":""Bob Sinclair"",""NHSNumber"":5555},{""Name"":""Sally Jamerson"",""NHSNumber"":66554},{""Name"":""Michael Myers"",""NHSNumber"":6666},{""Name"":""James Jamerson"",""NHSNumber"":12345}]";
+
+        // Parse the JSON array
+        JArray jsonArray = JArray.Parse(secondString);
+
+        // Extract NHS Numbers and Names from the JSON array
+        List<string> nhsNumbersSecond = new List<string>();
+        List<string> namesSecond = new List<string>();
+
+        foreach (JObject item in jsonArray)
+        {
+            string nhsNumber = item.Value<string>("NHSNumber");
+            string name = item.Value<string>("Name");
+
+            nhsNumbersSecond.Add(nhsNumber);
+            namesSecond.Add(name);
+        }
+
+        // Create a dictionary of names with their corresponding NHS numbers for the second string
+        Dictionary<string, string> nameNhsDictionarySecond = CreateNameNhsDictionary(namesSecond, nhsNumbersSecond);
+
+        // Display the table of names and NHS numbers for the second string
+        DisplayTable(nameNhsDictionarySecond);
+    }
+
+    static List<string> ExtractNhsNumbers(string input)
+    {
+        List<string> nhsNumbers = new List<string>();
+        Regex regex = new Regex(@"NHS Number:(\S+)");
+        MatchCollection matches = regex.Matches(input);
+        foreach (Match match in matches)
+        {
+            nhsNumbers.Add(match.Groups[1].Value);
+        }
+        return nhsNumbers;
+    }
+
+    static List<string> ExtractNames(string input)
+    {
+        List<string> names = new List<string>();
+        Regex regex = new Regex(@"Name:([^NHS]+)");
+        MatchCollection matches = regex.Matches(input);
+        foreach (Match match in matches)
+        {
+            names.Add(match.Groups[1].Value.Trim());
+        }
+        return names;
+    }
+
+    static Dictionary<string, string> CreateNameNhsDictionary(List<string> names, List<string> nhsNumbers)
+    {
+        Dictionary<string, string> nameNhsDictionary = new Dictionary<string, string>();
+        for (int i = 0; i < Math.Min(names.Count, nhsNumbers.Count); i++)
+        {
+            if (!nameNhsDictionary.ContainsKey(names[i]))
+            {
+                nameNhsDictionary.Add(names[i], nhsNumbers[i]);
+            }
+        }
+        return nameNhsDictionary;
+    }
+
+    static void DisplayTable(Dictionary<string, string> nameNhsDictionary)
+    {
+        Console.WriteLine("\nTable of Names with Corresponding NHS Numbers:");
+        Console.WriteLine("-------------------------------------------");
+        Console.WriteLine("Name              |   NHS Number");
+        Console.WriteLine("-------------------------------------------");
+        foreach (var kvp in nameNhsDictionary)
+        {
+            Console.WriteLine($"{kvp.Key,-18} | {kvp.Value}");
+        }
+        Console.WriteLine("-------------------------------------------");
+    }
+}
